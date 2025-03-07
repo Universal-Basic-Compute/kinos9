@@ -302,9 +302,10 @@ function SwarmDetailContent({ id }: { id: string }) {
 }
 
 // Main component that unwraps params
-export default function SwarmDetailPage({ params }: { params: { id: string } }) {
-  // Get the ID directly from params
-  const id = params.id;
+export default function SwarmDetailPage({ params }: { params: any }) {
+  // Use React.use to unwrap params if it's a Promise
+  const unwrappedParams = React.use(params);
+  const id = unwrappedParams.id;
   
   return <SwarmDetailContent id={id} />;
 }
