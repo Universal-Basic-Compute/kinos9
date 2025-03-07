@@ -1,8 +1,12 @@
+import * as dotenv from 'dotenv';
+// Load environment variables from .env.local file
+dotenv.config({ path: '.env.local' });
+
 import Airtable from 'airtable';
 import * as fs from 'fs';
 
 // Make sure to run this script with the proper environment variables set
-// You can run it with: npx ts-node -r dotenv/config app/scripts/getAirtableSchema.ts
+// You can run it with: npm run schema
 async function getAirtableSchema() {
   // Check for environment variables
   if (!process.env.AIRTABLE_API_KEY || !process.env.AIRTABLE_BASE_ID) {
