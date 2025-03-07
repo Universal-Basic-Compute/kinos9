@@ -1,17 +1,29 @@
 import Airtable from 'airtable';
+import { v4 as uuidv4 } from 'uuid';
 
 // Initialize Airtable
 const base = new Airtable({
   apiKey: process.env.AIRTABLE_API_KEY,
 }).base(process.env.AIRTABLE_BASE_ID as string);
 
-export async function getSwarms() {
+export async function getSwarms(fullData = false) {
   try {
     const records = await base('Swarms').select().all();
-    return records.map(record => ({
-      id: record.id,
-      name: record.get('name') as string,
-    }));
+    return records.map(record => {
+      if (fullData) {
+        return {
+          id: record.id,
+          swarmId: record.get('swarmId') as string,
+          name: record.get('name') as string,
+          // Add other fields as needed
+        };
+      } else {
+        return {
+          id: record.id,
+          name: record.get('name') as string,
+        };
+      }
+    });
   } catch (error) {
     console.error('Error fetching swarms from Airtable:', error);
     return [];
@@ -150,5 +162,84 @@ export async function getSwarmDetails(id: string) {
   } catch (error) {
     console.error('Error fetching swarm details from Airtable:', error);
     return null;
+  }
+}
+
+// New functions for News management
+
+export async function getAllNews() {
+  try {
+    const records = await base('News')
+      .select({
+        sort: [{ field: 'date', direction: 'desc' }],
+      })
+      .all();
+    
+    return records.map(record => ({
+      id: record.id,
+      newsId: record.get('newsId') as string,
+      title: record.get('title') as string,
+      content: record.get('content') as string,
+      date: record.get('date') as string,
+      swarmId: record.get('swarmId') as string,
+    }));
+  } catch (error) {
+    console.error('Error fetching news from Airtable:', error);
+    return [];
+  }
+}
+
+export async function createNewsItem(data: {
+  title: string;
+  content: string;
+  date: string;
+  swarmId: string;
+}) {
+  try {
+    const newsId = uuidv4();
+    
+    await base('News').create({
+      newsId,
+      title: data.title,
+      content: data.content,
+      date: data.date,
+      swarmId: data.swarmId,
+    });
+    
+    return { success: true };
+  } catch (error) {
+    console.error('Error creating news item in Airtable:', error);
+    throw error;
+  }
+}
+
+export async function updateNewsItem(id: string, data: Partial<{
+  title: string;
+  content: string;
+  date: string;
+  swarmId: string;
+}>) {
+  try {
+    await base('News').update(id, {
+      ...(data.title && { title: data.title }),
+      ...(data.content && { content: data.content }),
+      ...(data.date && { date: data.date }),
+      ...(data.swarmId && { swarmId: data.swarmId }),
+    });
+    
+    return { success: true };
+  } catch (error) {
+    console.error('Error updating news item in Airtable:', error);
+    throw error;
+  }
+}
+
+export async function deleteNewsItem(id: string) {
+  try {
+    await base('News').destroy(id);
+    return { success: true };
+  } catch (error) {
+    console.error('Error deleting news item from Airtable:', error);
+    throw error;
   }
 }
