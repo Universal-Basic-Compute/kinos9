@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useState, use } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getSwarmDetails, updateSwarmDescription } from '@/app/services/airtable';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-export default function SwarmDetailPage({ params }: { params: { id: string } | Promise<{ id: string }> }) {
+export default function SwarmDetailPage({ params }: { params: { id: string } }) {
   const router = useRouter();
   const [swarmDetails, setSwarmDetails] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -14,21 +14,11 @@ export default function SwarmDetailPage({ params }: { params: { id: string } | P
   const [isSaving, setIsSaving] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   
-  // Safely unwrap params
-  const unwrappedParams = React.useMemo(() => {
-    try {
-      // @ts-ignore - TypeScript doesn't know about React.use yet
-      return params instanceof Promise ? use(params) : params;
-    } catch (e) {
-      return params;
-    }
-  }, [params]);
-  
-  // Get the ID from unwrapped params
-  const id = unwrappedParams.id;
+  // Get the ID directly from params
+  const id = params.id;
 
   // Fetch swarm details
-  React.useEffect(() => {
+  useEffect(() => {
     async function fetchData() {
       try {
         const details = await getSwarmDetails(id);
