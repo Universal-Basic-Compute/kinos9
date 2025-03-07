@@ -2,6 +2,7 @@
   "name": "kinos9",
   "version": "0.1.0",
   "private": true,
+  "description": "Swarm Management Platform built with Next.js and Airtable",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
