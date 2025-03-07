@@ -29,7 +29,6 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <div className="flex">
-          {/* @ts-expect-error Async Server Component */}
           <SideMenu />
           <main className="flex-1">{children}</main>
         </div>

@@ -66,7 +66,7 @@ async function getAirtableSchema() {
           fieldNames.forEach(fieldName => {
             const value = firstRecord.fields[fieldName];
             // Get the type as a string
-            let fieldType = typeof value;
+            let fieldType: string = typeof value;
             
             // Try to determine more specific types
             if (Array.isArray(value)) {

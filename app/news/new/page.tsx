@@ -7,7 +7,7 @@ import Link from 'next/link';
 
 interface Swarm {
   id: string;
-  swarmId: string;
+  swarmId?: string;  // Make swarmId optional
   name: string;
 }
 
@@ -28,7 +28,7 @@ export default function NewNewsPage() {
       try {
         const swarmsData = await getSwarms(true); // true to get full swarm data
         setSwarms(swarmsData);
-        if (swarmsData.length > 0) {
+        if (swarmsData.length > 0 && swarmsData[0].swarmId) {
           setFormData(prev => ({ ...prev, swarmId: swarmsData[0].swarmId }));
         }
       } catch (error) {

@@ -5,6 +5,49 @@ import { getSwarmDetails, updateSwarmDescription } from '@/app/services/airtable
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+// Define interfaces for the data types
+interface Service {
+  serviceId: string;
+  name: string;
+  description: string;
+  basePrice: number;
+  serviceType: string;
+  [key: string]: any; // For other properties
+}
+
+interface NewsItem {
+  newsId: string;
+  title: string;
+  content: string;
+  date: string;
+  [key: string]: any;
+}
+
+interface Thought {
+  thoughtId: string;
+  content: string;
+  createdAt: string;
+  type: string;
+  [key: string]: any;
+}
+
+interface Mission {
+  missionId: string;
+  title: string;
+  description: string;
+  status: string;
+  dueDate: string | null;
+  [key: string]: any;
+}
+
+interface Redistribution {
+  wallet: string;
+  token: string;
+  amount: number;
+  date: string;
+  [key: string]: any;
+}
+
 // Create a wrapper component to handle the params
 function SwarmDetailContent({ id }: { id: string }) {
   const router = useRouter();
@@ -188,7 +231,7 @@ function SwarmDetailContent({ id }: { id: string }) {
         <div className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">Services</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {swarmDetails.services.map(service => (
+            {swarmDetails.services.map((service: Service) => (
               <div key={service.serviceId} className="bg-white p-4 rounded-lg border border-gray-200">
                 <h3 className="text-xl font-semibold mb-2">{service.name}</h3>
                 <p className="text-gray-600 mb-3">{service.description}</p>
@@ -211,7 +254,7 @@ function SwarmDetailContent({ id }: { id: string }) {
         <div className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">Latest News</h2>
           <div className="space-y-4">
-            {swarmDetails.news.map(item => (
+            {swarmDetails.news.map((item: NewsItem) => (
               <div key={item.newsId} className="bg-white p-4 rounded-lg border border-gray-200">
                 <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
                 <p className="text-gray-500 text-sm mb-2">{new Date(item.date).toLocaleDateString()}</p>
@@ -227,7 +270,7 @@ function SwarmDetailContent({ id }: { id: string }) {
         <div className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">Thoughts</h2>
           <div className="space-y-4">
-            {swarmDetails.thoughts.map(thought => (
+            {swarmDetails.thoughts.map((thought: Thought) => (
               <div key={thought.thoughtId} className="bg-white p-4 rounded-lg border border-gray-200">
                 <p className="whitespace-pre-line">{thought.content}</p>
                 <div className="flex justify-between mt-2">
@@ -249,7 +292,7 @@ function SwarmDetailContent({ id }: { id: string }) {
         <div className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">Missions</h2>
           <div className="space-y-4">
-            {swarmDetails.missions.map(mission => (
+            {swarmDetails.missions.map((mission: Mission) => (
               <div key={mission.missionId} className="bg-white p-4 rounded-lg border border-gray-200">
                 <div className="flex justify-between mb-2">
                   <h3 className="text-xl font-semibold">{mission.title}</h3>
@@ -284,7 +327,7 @@ function SwarmDetailContent({ id }: { id: string }) {
                 </tr>
               </thead>
               <tbody>
-                {swarmDetails.redistributions.map((redist, index) => (
+                {swarmDetails.redistributions.map((redist: Redistribution, index: number) => (
                   <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
                     <td className="py-2 px-4 border-b">{new Date(redist.date).toLocaleDateString()}</td>
                     <td className="py-2 px-4 border-b font-mono text-sm">{redist.wallet.substring(0, 6)}...{redist.wallet.substring(redist.wallet.length - 4)}</td>
@@ -304,7 +347,7 @@ function SwarmDetailContent({ id }: { id: string }) {
 // Main component that unwraps params
 export default function SwarmDetailPage({ params }: { params: any }) {
   // Use React.use to unwrap params if it's a Promise
-  const unwrappedParams = React.use(params);
+  const unwrappedParams = React.use(params) as { id: string };
   const id = unwrappedParams.id;
   
   return <SwarmDetailContent id={id} />;
