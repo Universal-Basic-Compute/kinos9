@@ -1,4 +1,4 @@
-// Use require instead of import
+// Use require instead of import for CommonJS compatibility
 const dotenv = require('dotenv');
 // Load environment variables from .env.local file
 dotenv.config({ path: '.env.local' });
@@ -6,8 +6,23 @@ dotenv.config({ path: '.env.local' });
 const Airtable = require('airtable');
 const fs = require('fs');
 
+// Define types for TypeScript
+interface Field {
+  name: string;
+  type: string;
+}
+
+interface TableSchema {
+  name: string;
+  fields: Field[];
+  records: any[];
+}
+
+interface Schema {
+  [tableName: string]: TableSchema;
+}
+
 // Make sure to run this script with the proper environment variables set
-// You can run it with: npm run schema
 async function getAirtableSchema() {
   // Check for environment variables
   if (!process.env.AIRTABLE_API_KEY || !process.env.AIRTABLE_BASE_ID) {
@@ -25,7 +40,7 @@ async function getAirtableSchema() {
     const tableNames = ['Swarms']; // Add other table names you know exist
     
     // Create a schema object to store all table structures
-    const schema = {};
+    const schema: Schema = {};
     
     // Process each table
     for (const tableName of tableNames) {
@@ -33,7 +48,7 @@ async function getAirtableSchema() {
       
       try {
         // Get table schema
-        const tableSchema = {
+        const tableSchema: TableSchema = {
           name: tableName,
           fields: [],
           records: [],
@@ -50,24 +65,24 @@ async function getAirtableSchema() {
           // Add fields to schema
           fieldNames.forEach(fieldName => {
             const value = firstRecord.fields[fieldName];
-            // Define type as a string that can hold any type name
-            let type = typeof value;
+            // Get the type as a string
+            let fieldType = typeof value;
             
             // Try to determine more specific types
             if (Array.isArray(value)) {
-              type = 'array';
+              fieldType = 'array';
             } else if (value instanceof Date) {
-              type = 'date';
+              fieldType = 'date';
             }
             
             tableSchema.fields.push({
               name: fieldName,
-              type: type,
+              type: fieldType,
             });
           });
           
           // Add sample records
-          tableSchema.records = records.map(record => ({
+          tableSchema.records = records.map((record: any) => ({
             id: record.id,
             fields: record.fields,
           }));
