@@ -52,7 +52,8 @@ async function getAirtableSchema() {
           // Add fields to schema
           fieldNames.forEach(fieldName => {
             const value = firstRecord.fields[fieldName];
-            let type = typeof value;
+            // Define type as a string that can hold any type name
+            let type: string = typeof value;
             
             // Try to determine more specific types
             if (Array.isArray(value)) {
