@@ -1,9 +1,86 @@
-import React from 'react';
-import { getSwarmDetails } from '@/app/services/airtable';
-import Link from 'next/link';
+'use client';
 
-export default async function SwarmDetailPage({ params }: { params: { id: string } }) {
-  const swarmDetails = await getSwarmDetails(params.id);
+import React, { useState } from 'react';
+import { getSwarmDetails, updateSwarmDescription } from '@/app/services/airtable';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+
+export default function SwarmDetailPage({ params }: { params: { id: string } }) {
+  const router = useRouter();
+  const [swarmDetails, setSwarmDetails] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [isEditingDescription, setIsEditingDescription] = useState(false);
+  const [editedDescription, setEditedDescription] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+
+  // Fetch swarm details
+  React.useEffect(() => {
+    async function fetchData() {
+      try {
+        const details = await getSwarmDetails(params.id);
+        setSwarmDetails(details);
+        if (details) {
+          setEditedDescription(details.swarm.description || '');
+        }
+      } catch (error) {
+        console.error('Error fetching swarm details:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    
+    fetchData();
+  }, [params.id]);
+
+  const handleEditDescription = () => {
+    setIsEditingDescription(true);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditingDescription(false);
+    setEditedDescription(swarmDetails.swarm.description || '');
+  };
+
+  const handleSaveDescription = async () => {
+    if (!swarmDetails) return;
+    
+    setIsSaving(true);
+    try {
+      await updateSwarmDescription(swarmDetails.swarm.id, editedDescription);
+      
+      // Update local state
+      setSwarmDetails({
+        ...swarmDetails,
+        swarm: {
+          ...swarmDetails.swarm,
+          description: editedDescription
+        }
+      });
+      
+      setIsEditingDescription(false);
+      setSuccessMessage('Description updated successfully!');
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => {
+        setSuccessMessage('');
+      }, 3000);
+    } catch (error) {
+      console.error('Error updating description:', error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="p-8 animate-pulse">
+        <div className="h-10 bg-gray-200 rounded w-1/3 mb-4"></div>
+        <div className="h-4 bg-gray-200 rounded w-2/3 mb-8"></div>
+        <div className="h-64 bg-gray-200 rounded mb-8"></div>
+      </div>
+    );
+  }
   
   if (!swarmDetails) {
     return (
@@ -18,6 +95,12 @@ export default async function SwarmDetailPage({ params }: { params: { id: string
 
   return (
     <div className="p-8">
+      {successMessage && (
+        <div className="mb-4 p-4 bg-green-100 text-green-800 rounded-md">
+          {successMessage}
+        </div>
+      )}
+      
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">{swarmDetails.swarm.name}</h1>
         <p className="text-gray-600 mb-4">{swarmDetails.swarm.shortDescription}</p>
@@ -52,10 +135,50 @@ export default async function SwarmDetailPage({ params }: { params: { id: string
         </div>
         
         <div className="mb-6">
-          <h2 className="text-2xl font-semibold mb-3">Description</h2>
-          <div className="bg-white p-4 rounded-lg border border-gray-200">
-            <p className="whitespace-pre-line">{swarmDetails.swarm.description}</p>
+          <div className="flex justify-between items-center mb-3">
+            <h2 className="text-2xl font-semibold">Description</h2>
+            {!isEditingDescription && (
+              <button 
+                onClick={handleEditDescription}
+                className="text-blue-500 hover:text-blue-700 flex items-center"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                </svg>
+                Edit
+              </button>
+            )}
           </div>
+          
+          {isEditingDescription ? (
+            <div className="bg-white p-4 rounded-lg border border-gray-200">
+              <textarea
+                value={editedDescription}
+                onChange={(e) => setEditedDescription(e.target.value)}
+                rows={10}
+                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              <div className="flex justify-end mt-3">
+                <button
+                  onClick={handleCancelEdit}
+                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md mr-2"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSaveDescription}
+                  disabled={isSaving}
+                  className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md disabled:opacity-50"
+                >
+                  {isSaving ? 'Saving...' : 'Save'}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="bg-white p-4 rounded-lg border border-gray-200">
+              <p className="whitespace-pre-line">{swarmDetails.swarm.description}</p>
+            </div>
+          )}
         </div>
       </div>
       

@@ -243,3 +243,16 @@ export async function deleteNewsItem(id: string) {
     throw error;
   }
 }
+
+export async function updateSwarmDescription(id: string, description: string) {
+  try {
+    await base('Swarms').update(id, {
+      description: description,
+    });
+    
+    return { success: true };
+  } catch (error) {
+    console.error('Error updating swarm description in Airtable:', error);
+    throw error;
+  }
+}
