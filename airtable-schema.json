@@ -1,0 +1,409 @@
+{
+  "Swarms": {
+    "name": "Swarms",
+    "fields": [
+      {
+        "name": "swarmId",
+        "type": "string"
+      },
+      {
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "name": "image",
+        "type": "string"
+      },
+      {
+        "name": "pool",
+        "type": "string"
+      },
+      {
+        "name": "weeklyRevenue",
+        "type": "number"
+      },
+      {
+        "name": "totalRevenue",
+        "type": "number"
+      },
+      {
+        "name": "gallery",
+        "type": "string"
+      },
+      {
+        "name": "tags",
+        "type": "string"
+      },
+      {
+        "name": "swarmType",
+        "type": "string"
+      },
+      {
+        "name": "multiple",
+        "type": "number"
+      },
+      {
+        "name": "revenueShare",
+        "type": "number"
+      },
+      {
+        "name": "wallet",
+        "type": "string"
+      },
+      {
+        "name": "description",
+        "type": "string"
+      },
+      {
+        "name": "shortDescription",
+        "type": "string"
+      },
+      {
+        "name": "hotWallet",
+        "type": "string"
+      },
+      {
+        "name": "balance",
+        "type": "number"
+      },
+      {
+        "name": "secondaryMarketAvailable",
+        "type": "boolean"
+      }
+    ]
+  },
+  "News": {
+    "name": "News",
+    "fields": [
+      {
+        "name": "swarmId",
+        "type": "string"
+      },
+      {
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "name": "content",
+        "type": "string"
+      },
+      {
+        "name": "date",
+        "type": "string"
+      },
+      {
+        "name": "newsId",
+        "type": "string"
+      }
+    ]
+  },
+  "Services": {
+    "name": "Services",
+    "fields": [
+      {
+        "name": "serviceId",
+        "type": "string"
+      },
+      {
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "name": "description",
+        "type": "string"
+      },
+      {
+        "name": "fullDescription",
+        "type": "string"
+      },
+      {
+        "name": "basePrice",
+        "type": "number"
+      },
+      {
+        "name": "categories",
+        "type": "string"
+      },
+      {
+        "name": "computePerTask",
+        "type": "number"
+      },
+      {
+        "name": "averageCompletionTime",
+        "type": "string"
+      },
+      {
+        "name": "capabilities",
+        "type": "string"
+      },
+      {
+        "name": "serviceType",
+        "type": "string"
+      },
+      {
+        "name": "swarmId",
+        "type": "string"
+      },
+      {
+        "name": "banner",
+        "type": "string"
+      },
+      {
+        "name": "activeSubscriptions",
+        "type": "number"
+      }
+    ]
+  },
+  "Collaborations": {
+    "name": "Collaborations",
+    "fields": [
+      {
+        "name": "providerSwarmId",
+        "type": "string"
+      },
+      {
+        "name": "clientSwarmId",
+        "type": "string"
+      },
+      {
+        "name": "serviceId",
+        "type": "string"
+      },
+      {
+        "name": "status",
+        "type": "string"
+      },
+      {
+        "name": "price",
+        "type": "number"
+      },
+      {
+        "name": "startDate",
+        "type": "string"
+      },
+      {
+        "name": "collaborationId",
+        "type": "string"
+      },
+      {
+        "name": "telegramChatId",
+        "type": "number"
+      }
+    ]
+  },
+  "Messages": {
+    "name": "Messages",
+    "fields": [
+      {
+        "name": "collaborationId",
+        "type": "string"
+      },
+      {
+        "name": "senderId",
+        "type": "string"
+      },
+      {
+        "name": "content",
+        "type": "string"
+      },
+      {
+        "name": "timestamp",
+        "type": "string"
+      },
+      {
+        "name": "messageId",
+        "type": "string"
+      },
+      {
+        "name": "receiverId",
+        "type": "string"
+      }
+    ]
+  },
+  "Specifications": {
+    "name": "Specifications",
+    "fields": [
+      {
+        "name": "specificationId",
+        "type": "string"
+      },
+      {
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "name": "content",
+        "type": "string"
+      },
+      {
+        "name": "collaborationId",
+        "type": "string"
+      },
+      {
+        "name": "createdAt",
+        "type": "string"
+      }
+    ]
+  },
+  "Deliverables": {
+    "name": "Deliverables",
+    "fields": [
+      {
+        "name": "deliverableId",
+        "type": "string"
+      },
+      {
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "name": "content",
+        "type": "string"
+      },
+      {
+        "name": "collaborationId",
+        "type": "string"
+      },
+      {
+        "name": "createdAt",
+        "type": "string"
+      }
+    ]
+  },
+  "Validations": {
+    "name": "Validations",
+    "fields": []
+  },
+  "Redistributions": {
+    "name": "Redistributions",
+    "fields": [
+      {
+        "name": "wallet",
+        "type": "string"
+      },
+      {
+        "name": "token",
+        "type": "string"
+      },
+      {
+        "name": "amount",
+        "type": "number"
+      },
+      {
+        "name": "date",
+        "type": "string"
+      },
+      {
+        "name": "swarmId",
+        "type": "string"
+      }
+    ]
+  },
+  "Transactions": {
+    "name": "Transactions",
+    "fields": [
+      {
+        "name": "createdAt",
+        "type": "string"
+      }
+    ]
+  },
+  "Thoughts": {
+    "name": "Thoughts",
+    "fields": [
+      {
+        "name": "thoughtId",
+        "type": "string"
+      },
+      {
+        "name": "swarmId",
+        "type": "string"
+      },
+      {
+        "name": "content",
+        "type": "string"
+      },
+      {
+        "name": "createdAt",
+        "type": "string"
+      },
+      {
+        "name": "type",
+        "type": "string"
+      },
+      {
+        "name": "context",
+        "type": "string"
+      }
+    ]
+  },
+  "Missions": {
+    "name": "Missions",
+    "fields": [
+      {
+        "name": "missionId",
+        "type": "string"
+      },
+      {
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "name": "description",
+        "type": "string"
+      },
+      {
+        "name": "objective",
+        "type": "string"
+      },
+      {
+        "name": "priority",
+        "type": "string"
+      },
+      {
+        "name": "status",
+        "type": "string"
+      },
+      {
+        "name": "createdAt",
+        "type": "string"
+      },
+      {
+        "name": "updatedAt",
+        "type": "string"
+      },
+      {
+        "name": "dueDate",
+        "type": "string"
+      },
+      {
+        "name": "assignedSwarms",
+        "type": "string"
+      },
+      {
+        "name": "leadSwarm",
+        "type": "string"
+      },
+      {
+        "name": "dependencies",
+        "type": "string"
+      },
+      {
+        "name": "features",
+        "type": "string"
+      },
+      {
+        "name": "resources",
+        "type": "string"
+      },
+      {
+        "name": "metrics",
+        "type": "string"
+      },
+      {
+        "name": "tags",
+        "type": "string"
+      }
+    ]
+  }
+}
