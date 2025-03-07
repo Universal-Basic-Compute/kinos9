@@ -24,6 +24,7 @@ export default function NewsTable({ initialNews }: NewsTableProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [successMessage, setSuccessMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [expandedContent, setExpandedContent] = useState<string | null>(null);
 
   const handleEdit = (item: NewsItem) => {
     setEditingId(item.id);
@@ -100,6 +101,23 @@ export default function NewsTable({ initialNews }: NewsTableProps) {
     }
   };
 
+  const toggleContentExpand = (id: string) => {
+    if (expandedContent === id) {
+      setExpandedContent(null);
+    } else {
+      setExpandedContent(id);
+    }
+  };
+
+  if (news.length === 0) {
+    return (
+      <div className="bg-white rounded-lg shadow-md p-8 text-center">
+        <p className="text-gray-500 mb-4">No news items found.</p>
+        <p className="text-sm text-gray-400">Click the "Add News" button to create your first news item.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden">
       {(successMessage || errorMessage) && (
@@ -131,7 +149,7 @@ export default function NewsTable({ initialNews }: NewsTableProps) {
                         name="title"
                         value={editForm.title || ''}
                         onChange={handleChange}
-                        className="w-full p-2 border border-gray-300 rounded-md"
+                        className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </td>
                     <td className="px-6 py-4">
@@ -140,7 +158,7 @@ export default function NewsTable({ initialNews }: NewsTableProps) {
                         name="date"
                         value={editForm.date ? new Date(editForm.date).toISOString().split('T')[0] : ''}
                         onChange={handleChange}
-                        className="w-full p-2 border border-gray-300 rounded-md"
+                        className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </td>
                     <td className="px-6 py-4">
@@ -149,7 +167,7 @@ export default function NewsTable({ initialNews }: NewsTableProps) {
                         name="swarmId"
                         value={editForm.swarmId || ''}
                         onChange={handleChange}
-                        className="w-full p-2 border border-gray-300 rounded-md"
+                        className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </td>
                     <td className="px-6 py-4">
@@ -158,20 +176,20 @@ export default function NewsTable({ initialNews }: NewsTableProps) {
                         value={editForm.content || ''}
                         onChange={handleChange}
                         rows={3}
-                        className="w-full p-2 border border-gray-300 rounded-md"
+                        className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <button
                         onClick={handleSave}
                         disabled={isLoading}
-                        className="text-indigo-600 hover:text-indigo-900 mr-3"
+                        className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded-md mr-2 transition-colors"
                       >
                         {isLoading ? 'Saving...' : 'Save'}
                       </button>
                       <button
                         onClick={handleCancel}
-                        className="text-gray-600 hover:text-gray-900"
+                        className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-3 py-1 rounded-md transition-colors"
                       >
                         Cancel
                       </button>
@@ -192,7 +210,20 @@ export default function NewsTable({ initialNews }: NewsTableProps) {
                       <div className="text-sm text-gray-500">{item.swarmId}</div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm text-gray-500 line-clamp-2">{item.content}</div>
+                      <div 
+                        className={`text-sm text-gray-500 ${expandedContent === item.id ? '' : 'line-clamp-2'} cursor-pointer`}
+                        onClick={() => toggleContentExpand(item.id)}
+                      >
+                        {item.content}
+                      </div>
+                      {item.content.length > 100 && (
+                        <button 
+                          onClick={() => toggleContentExpand(item.id)} 
+                          className="text-xs text-blue-500 mt-1"
+                        >
+                          {expandedContent === item.id ? 'Show less' : 'Show more'}
+                        </button>
+                      )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <button
