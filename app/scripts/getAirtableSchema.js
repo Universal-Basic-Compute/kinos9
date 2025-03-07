@@ -1,7 +1,7 @@
 // Use require instead of import for CommonJS compatibility
 const dotenv = require('dotenv');
-// Load environment variables from .env.local file
-dotenv.config({ path: '.env.local' });
+// Load environment variables from .env file
+dotenv.config({ path: '.env' });
 
 const Airtable = require('airtable');
 const fs = require('fs');
