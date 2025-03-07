@@ -20,53 +20,65 @@ async function getAirtableSchema() {
   }).base(process.env.AIRTABLE_BASE_ID as string);
 
   try {
-    // Get all tables in the base
-    const tables = await base.tables();
+    // Define known table names (you can add more as needed)
+    const tableNames = ['Swarms']; // Add other table names you know exist
     
     // Create a schema object to store all table structures
     const schema: Record<string, any> = {};
     
     // Process each table
-    for (const table of tables) {
-      console.log(`Processing table: ${table.name}`);
+    for (const tableName of tableNames) {
+      console.log(`Processing table: ${tableName}`);
       
-      // Get table schema
-      const tableSchema = {
-        id: table.id,
-        name: table.name,
-        fields: [] as Array<{
-          id: string;
-          name: string;
-          type: string;
-          options?: any;
-        }>,
-        records: [] as any[],
-      };
-      
-      // Get field information
-      for (const field of table.fields) {
-        tableSchema.fields.push({
-          id: field.id,
-          name: field.name,
-          type: field.type,
-          options: field.options,
-        });
-      }
-      
-      // Get a sample of records to understand the data
       try {
-        const records = await table.select({ maxRecords: 5 }).firstPage();
-        tableSchema.records = records.map(record => ({
-          id: record.id,
-          fields: record.fields,
-        }));
+        // Get table schema
+        const tableSchema = {
+          name: tableName,
+          fields: [] as Array<{
+            name: string;
+            type: string;
+          }>,
+          records: [] as any[],
+        };
+        
+        // Get records to understand the structure
+        const records = await base(tableName).select({ maxRecords: 5 }).all();
+        
+        if (records.length > 0) {
+          // Extract field names from the first record
+          const firstRecord = records[0];
+          const fieldNames = Object.keys(firstRecord.fields);
+          
+          // Add fields to schema
+          fieldNames.forEach(fieldName => {
+            const value = firstRecord.fields[fieldName];
+            let type = typeof value;
+            
+            // Try to determine more specific types
+            if (Array.isArray(value)) {
+              type = 'array';
+            } else if (value instanceof Date) {
+              type = 'date';
+            }
+            
+            tableSchema.fields.push({
+              name: fieldName,
+              type: type,
+            });
+          });
+          
+          // Add sample records
+          tableSchema.records = records.map(record => ({
+            id: record.id,
+            fields: record.fields,
+          }));
+        }
+        
+        // Add table schema to the overall schema
+        schema[tableName] = tableSchema;
       } catch (error) {
-        console.error(`Error fetching records for table ${table.name}:`, error);
-        tableSchema.records = [];
+        console.error(`Error processing table ${tableName}:`, error);
       }
-      
-      // Add table schema to the overall schema
-      schema[table.name] = tableSchema;
     }
     
     // Output the schema
