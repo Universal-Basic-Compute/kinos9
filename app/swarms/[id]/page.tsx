@@ -14,21 +14,14 @@ export default function SwarmDetailPage({ params }: { params: { id: string } }) 
   const [isSaving, setIsSaving] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   
-  // Unwrap params using React.use() if it's a Promise
-  const unwrappedParams = React.useMemo(() => {
-    try {
-      // @ts-ignore - TypeScript doesn't know about React.use yet
-      return typeof React.use === 'function' ? React.use(params) : params;
-    } catch {
-      return params;
-    }
-  }, [params]);
+  // Get the ID directly from params
+  const id = params.id;
 
   // Fetch swarm details
   React.useEffect(() => {
     async function fetchData() {
       try {
-        const details = await getSwarmDetails(unwrappedParams.id);
+        const details = await getSwarmDetails(id);
         setSwarmDetails(details);
         if (details) {
           setEditedDescription(details.swarm.description || '');
@@ -41,7 +34,7 @@ export default function SwarmDetailPage({ params }: { params: { id: string } }) 
     }
     
     fetchData();
-  }, [unwrappedParams.id]);
+  }, [id]);
 
   const handleEditDescription = () => {
     setIsEditingDescription(true);
