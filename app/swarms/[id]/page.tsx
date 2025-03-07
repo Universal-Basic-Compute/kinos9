@@ -5,7 +5,8 @@ import { getSwarmDetails, updateSwarmDescription } from '@/app/services/airtable
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-export default function SwarmDetailPage({ params }: { params: { id: string } }) {
+// Create a wrapper component to handle the params
+function SwarmDetailContent({ id }: { id: string }) {
   const router = useRouter();
   const [swarmDetails, setSwarmDetails] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -13,9 +14,6 @@ export default function SwarmDetailPage({ params }: { params: { id: string } }) 
   const [editedDescription, setEditedDescription] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
-  
-  // Get the ID directly from params
-  const id = params.id;
 
   // Fetch swarm details
   useEffect(() => {
@@ -301,4 +299,12 @@ export default function SwarmDetailPage({ params }: { params: { id: string } }) 
       )}
     </div>
   );
+}
+
+// Main component that unwraps params
+export default function SwarmDetailPage({ params }: { params: { id: string } }) {
+  // Get the ID directly from params
+  const id = params.id;
+  
+  return <SwarmDetailContent id={id} />;
 }
