@@ -15,6 +15,9 @@ export async function getSwarms(fullData = false) {
           id: record.id,
           swarmId: record.get('swarmId') as string,
           name: record.get('name') as string,
+          shortDescription: record.get('shortDescription') as string,
+          swarmType: record.get('swarmType') as string,
+          revenueShare: record.get('revenueShare') as number,
           // Add other fields as needed
         };
       } else {

@@ -14,7 +14,12 @@ interface Swarm {
 export default function NewNewsPage() {
   const router = useRouter();
   const [swarms, setSwarms] = useState<Swarm[]>([]);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    title: string;
+    content: string;
+    date: string;
+    swarmId: string;
+  }>({
     title: '',
     content: '',
     date: new Date().toISOString().split('T')[0],
@@ -28,8 +33,10 @@ export default function NewNewsPage() {
       try {
         const swarmsData = await getSwarms(true); // true to get full swarm data
         setSwarms(swarmsData);
-        if (swarmsData.length > 0 && swarmsData[0].swarmId) {
-          setFormData(prev => ({ ...prev, swarmId: swarmsData[0].swarmId }));
+        if (swarmsData.length > 0) {
+          // Use empty string as fallback if swarmId is undefined
+          const swarmId = swarmsData[0].swarmId || '';
+          setFormData(prev => ({ ...prev, swarmId }));
         }
       } catch (error) {
         console.error('Error fetching swarms:', error);
