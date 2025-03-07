@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "schema": "ts-node app/scripts/getAirtableSchema.ts"
+    "schema": "node app/scripts/getAirtableSchema.js"
   },
   "dependencies": {
     "airtable": "^0.12.2",
